@@ -1,9 +1,11 @@
 import stylex from "@stylexjs/stylex";
+import { Link } from "@tanstack/react-router";
 
-type ComponentType = { head: string; description: string };
+type ComponentType = { head: string; description: string; route?: string };
 const ComponentsList: ComponentType[] = [
   {
     head: "Carousel",
+    route: "/carousel",
     description:
       "Design a Auto scroll carousel component that displays a slideshow of images or content with smooth animation",
   },
@@ -39,19 +41,21 @@ const ComponentsList: ComponentType[] = [
 
 function Card(data: ComponentType, index: number) {
   return (
-    <div
-      key={index}
-      {...stylex.props(
-        styles.card,
-        bgStylesArray[index % bgStylesArray.length]
-      )}
-    >
-      <div {...stylex.props(styles.img)}>&nbsp;</div>
-      <div {...stylex.props(styles.content)}>
-        <div {...stylex.props(styles.title)}>{data.head}</div>
-        <div {...stylex.props(styles.description)}>{data.description}</div>
+    <Link to={data.route} {...stylex.props(styles.cardLink)}>
+      <div
+        key={index}
+        {...stylex.props(
+          styles.card,
+          bgStylesArray[index % bgStylesArray.length]
+        )}
+      >
+        <div {...stylex.props(styles.img)}>&nbsp;</div>
+        <div {...stylex.props(styles.content)}>
+          <div {...stylex.props(styles.title)}>{data.head}</div>
+          <div {...stylex.props(styles.description)}>{data.description}</div>
+        </div>
       </div>
-    </div>
+    </Link>
   );
 }
 
@@ -67,6 +71,10 @@ const styles = stylex.create({
     display: "grid",
     gridTemplateColumns: "repeat(3, 1fr)",
     gridRowGap: 20,
+  },
+  cardLink: {
+    color: "#F4F1D0",
+    textDecoration: "none",
   },
   card: {
     display: "flex",

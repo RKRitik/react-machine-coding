@@ -1,6 +1,10 @@
+import { createFileRoute, Link } from "@tanstack/react-router";
 import * as stylex from "@stylexjs/stylex";
-import Card from "./components/card";
+import Card from "../components/card";
 
+export const Route = createFileRoute("/")({
+  component: App,
+});
 const links = [
   {
     name: "LINKEDIN",
@@ -33,7 +37,9 @@ function Header() {
     <div {...stylex.props(styles.header)}>
       <img width={40} src={"./logo.svg"} alt="header-logo"></img>
       <SocialLinks />
-      <div>About Me</div>
+      <Link to="/about" {...stylex.props(styles.a)}>
+        About me
+      </Link>
     </div>
   );
 }
@@ -96,6 +102,4 @@ const styles = stylex.create({
     },
   },
 });
-
-export default App;
 
