@@ -37,9 +37,15 @@ const ComponentsList: ComponentType[] = [
   },
 ];
 
-function Card(data: ComponentType) {
+function Card(data: ComponentType, index: number) {
   return (
-    <div {...stylex.props(styles.card)}>
+    <div
+      key={index}
+      {...stylex.props(
+        styles.card,
+        bgStylesArray[index % bgStylesArray.length]
+      )}
+    >
       <div {...stylex.props(styles.img)}>&nbsp;</div>
       <div {...stylex.props(styles.content)}>
         <div {...stylex.props(styles.title)}>{data.head}</div>
@@ -52,9 +58,7 @@ function Card(data: ComponentType) {
 export default function Cards() {
   return (
     <div {...stylex.props(styles.cards)}>
-      {ComponentsList.map((component, index) => (
-        <Card key={index} {...component} />
-      ))}
+      {ComponentsList.map((component, index) => Card(component, index))}
     </div>
   );
 }
@@ -66,6 +70,7 @@ const styles = stylex.create({
   },
   card: {
     display: "flex",
+    cursor: "pointer",
     flexDirection: "column",
     backgroundColor: "#16171d",
     height: 420,
@@ -77,7 +82,7 @@ const styles = stylex.create({
     borderRadius: 12,
   },
   img: {
-    backgroundColor: "#9AA88C",
+    // backgroundColor: "",
     height: "55%",
     borderTopLeftRadius: 12,
     borderTopRightRadius: 12,
@@ -86,3 +91,25 @@ const styles = stylex.create({
   title: { fontWeight: 700, fontSize: 28 },
   description: { fontSize: 16 },
 });
+
+const bgStyles = stylex.create({
+  bg1: { backgroundColor: "#9AA88C" },
+  bg2: { backgroundColor: "#a88c8c" },
+  bg3: { backgroundColor: "#9aa88c" },
+  bg4: { backgroundColor: "#8ca8a8" },
+  bg5: { backgroundColor: "#9a8ca8" },
+  bg6: { backgroundColor: "#aaaaaa" },
+  bg7: { backgroundColor: "#ac6363" },
+  bg8: { backgroundColor: "#c6b37f" },
+});
+
+const bgStylesArray = [
+  bgStyles.bg1,
+  bgStyles.bg2,
+  bgStyles.bg3,
+  bgStyles.bg4,
+  bgStyles.bg5,
+  bgStyles.bg6,
+  bgStyles.bg7,
+  bgStyles.bg8,
+];
