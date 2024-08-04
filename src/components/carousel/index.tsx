@@ -1,4 +1,6 @@
 import stylex from "@stylexjs/stylex";
+import { FaArrowRight } from "react-icons/fa6";
+import { FaArrowLeft } from "react-icons/fa6";
 import { ReactNode, useState } from "react";
 
 interface propType {
@@ -21,16 +23,19 @@ function Carousel(props: propType) {
   function prevSlide() {
     setIndex((index - 1 + totalSlides) % totalSlides);
   }
-  function slideButtons() {
+  function leftButton() {
     return (
-      <div {...stylex.props(styles.slideButtons)}>
-        <button onClick={prevSlide} {...stylex.props(styles.prevButton)}>
-          <img width={40} src={"./left-arrow.svg"} alt="header-logo"></img>
-        </button>
-        <button onClick={nextSlide} {...stylex.props(styles.nextButton)}>
-          <img width={40} src={"./left-arrow.svg"} alt="header-logo"></img>
-        </button>
-      </div>
+      <button onClick={prevSlide} {...stylex.props(styles.prevButton)}>
+        <FaArrowLeft />
+      </button>
+    );
+  }
+
+  function rightButton() {
+    return (
+      <button onClick={nextSlide} {...stylex.props(styles.nextButton)}>
+        <FaArrowRight />
+      </button>
     );
   }
 
@@ -52,8 +57,19 @@ function Carousel(props: propType) {
 
   return (
     <div {...stylex.props(styles.container)}>
-      {props.children?.[index]}
-      {slideButtons()}
+      <div {...stylex.props(styles.slideContent)}>
+        {props.children?.map((child, index) => (
+          <div
+            key={index}
+            style={{ transform: `translateX(-${index * 100}%)` }}
+            {...stylex.props(styles.slideContent)}
+          >
+            {child}
+          </div>
+        ))}
+      </div>
+      {leftButton()}
+      {rightButton()}
       {slidePosition()}
     </div>
   );
@@ -69,6 +85,18 @@ const styles = stylex.create({
     minHeight: 300,
     border: "1px solid white",
     borderRadius: 4,
+    overflow: "hidden",
+  },
+  slideContainer: {
+    display: "flex",
+    width: "100%",
+    height: "100%",
+  },
+  slideContent: {
+    userSelect: "none",
+    display: "flex",
+    width: "100%",
+    height: "100%",
   },
   slidePosition: {
     position: "absolute",
@@ -82,19 +110,21 @@ const styles = stylex.create({
     width: 30,
     borderBottom: "3px solid white",
   },
-  slideButtons: {
-    position: "absolute",
-    width: "100%",
-    backgroundColor: "red",
-  },
   prevButton: {
+    cursor: "pointer",
     position: "absolute",
-    left: 20,
+    left: 10,
+    color: "white",
+    border: "none",
+    background: "transparent",
   },
   nextButton: {
+    cursor: "pointer",
+    border: "none",
+    color: "white",
     position: "absolute",
-    right: 20,
-    transform: "rotate(180deg)",
+    right: 10,
+    background: "transparent",
   },
 });
 
