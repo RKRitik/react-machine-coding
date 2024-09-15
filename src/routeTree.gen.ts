@@ -11,11 +11,17 @@
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
+import { Route as TimerImport } from './routes/timer'
 import { Route as CarouselImport } from './routes/carousel'
 import { Route as AboutImport } from './routes/about'
 import { Route as IndexImport } from './routes/index'
 
 // Create/Update Routes
+
+const TimerRoute = TimerImport.update({
+  path: '/timer',
+  getParentRoute: () => rootRoute,
+} as any)
 
 const CarouselRoute = CarouselImport.update({
   path: '/carousel',
@@ -57,6 +63,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CarouselImport
       parentRoute: typeof rootRoute
     }
+    '/timer': {
+      id: '/timer'
+      path: '/timer'
+      fullPath: '/timer'
+      preLoaderRoute: typeof TimerImport
+      parentRoute: typeof rootRoute
+    }
   }
 }
 
@@ -66,6 +79,7 @@ export const routeTree = rootRoute.addChildren({
   IndexRoute,
   AboutRoute,
   CarouselRoute,
+  TimerRoute,
 })
 
 /* prettier-ignore-end */
@@ -78,7 +92,8 @@ export const routeTree = rootRoute.addChildren({
       "children": [
         "/",
         "/about",
-        "/carousel"
+        "/carousel",
+        "/timer"
       ]
     },
     "/": {
@@ -89,6 +104,9 @@ export const routeTree = rootRoute.addChildren({
     },
     "/carousel": {
       "filePath": "carousel.tsx"
+    },
+    "/timer": {
+      "filePath": "timer.tsx"
     }
   }
 }
