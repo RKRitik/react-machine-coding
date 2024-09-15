@@ -8,6 +8,13 @@ export const Route = createFileRoute("/carousel")({
 
 function ShowCarousel() {
   const divs: ReactNode[] = [<div>test1</div>, <div>test2</div>];
-  return <Carousel>{divs}</Carousel>;
+  return (
+    <div>
+      <p>Default</p> <Carousel>{divs}</Carousel>
+      <p>Autoplay</p> <Carousel autoPlay={true}>{divs}</Carousel>
+      <p>Autoplay with infinite scroll</p>{" "}
+      <Carousel infiniteScroll={true}>{divs}</Carousel>
+    </div>
+  );
 }
 

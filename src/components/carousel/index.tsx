@@ -1,28 +1,67 @@
 import stylex from "@stylexjs/stylex";
 import { FaArrowRight } from "react-icons/fa6";
 import { FaArrowLeft } from "react-icons/fa6";
-import { ReactNode, useState } from "react";
+import { ReactNode, useState, useEffect, useRef } from "react";
 
 interface propType {
   children: ReactNode[];
+  autoPlay?: boolean;
+  infiniteScroll?: boolean; // Add optional infiniteScroll prop
 }
 
-/**
- *
- * @param props list of nodes to be rendered in carousel
- * @returns Carousel
- */
 function Carousel(props: propType) {
+  const [slides, setSlides] = useState<ReactNode[]>([]);
+  const [index, setIndex] = useState(1); // Start at 1 to show first slide correctly
   const totalSlides = props.children.length;
-  const [index, setIndex] = useState(0);
+  const transitionRef = useRef<boolean>(true); // To control transition application
+
+  useEffect(() => {
+    if (props.autoPlay) {
+      setInterval(nextSlide, 2000);
+    }
+  }, []);
+
+  useEffect(() => {
+    // Clone first and last slides for seamless infinite scrolling
+    setSlides([
+      props.children[totalSlides - 1],
+      ...props.children,
+      props.children[0],
+    ]);
+  }, [props.children, totalSlides]);
+
+  function handleTransitionEnd() {
+    if (!transitionRef.current) return;
+
+    if (props.infiniteScroll) {
+      if (index === 0) {
+        setIndex(totalSlides); // Jump to the real last slide (no transition)
+        transitionRef.current = false; // Disable transition for jump
+      } else if (index === totalSlides + 1) {
+        setIndex(1); // Jump to the real first slide (no transition)
+        transitionRef.current = false; // Disable transition for jump
+      }
+    }
+  }
 
   function nextSlide() {
-    setIndex((index + 1) % totalSlides);
+    if (transitionRef.current) {
+      setIndex(index + 1);
+    } else {
+      transitionRef.current = true; // Re-enable transition after jump
+      setTimeout(() => setIndex(index + 1), 0); // Move to next with transition
+    }
   }
 
   function prevSlide() {
-    setIndex((index - 1 + totalSlides) % totalSlides);
+    if (transitionRef.current) {
+      setIndex(index - 1);
+    } else {
+      transitionRef.current = true; // Re-enable transition after jump
+      setTimeout(() => setIndex(index - 1), 0); // Move to previous with transition
+    }
   }
+
   function leftButton() {
     return (
       <button onClick={prevSlide} {...stylex.props(styles.prevButton)}>
@@ -44,9 +83,11 @@ function Carousel(props: propType) {
       <div {...stylex.props(styles.slidePosition)}>
         {Array.from({ length: totalSlides }, (_v, i) => (
           <div
-            onClick={() => setIndex(i)}
+            onClick={() => setIndex(i + 1)}
             key={i}
-            {...stylex.props(i === index ? styles.slideSelected : styles.slide)}
+            {...stylex.props(
+              i + 1 === index ? styles.slideSelected : styles.slide
+            )}
           >
             &nbsp;
           </div>
@@ -57,13 +98,16 @@ function Carousel(props: propType) {
 
   return (
     <div {...stylex.props(styles.container)}>
-      <div {...stylex.props(styles.slideContent)}>
-        {props.children?.map((child, index) => (
-          <div
-            key={index}
-            style={{ transform: `translateX(-${index * 100}%)` }}
-            {...stylex.props(styles.slideContent)}
-          >
+      <div
+        {...stylex.props(styles.slidesWrapper)}
+        style={{
+          transform: `translateX(-${index * 100}%)`,
+          transition: transitionRef.current ? "transform 0.5s ease" : "none",
+        }}
+        onTransitionEnd={handleTransitionEnd}
+      >
+        {slides?.map((child, idx) => (
+          <div key={idx} {...stylex.props(styles.slideContent)}>
             {child}
           </div>
         ))}
@@ -87,16 +131,18 @@ const styles = stylex.create({
     borderRadius: 4,
     overflow: "hidden",
   },
-  slideContainer: {
+  slidesWrapper: {
     display: "flex",
     width: "100%",
-    height: "100%",
   },
   slideContent: {
     userSelect: "none",
     display: "flex",
     width: "100%",
     height: "100%",
+    flexShrink: 0,
+    justifyContent: "center",
+    alignItems: "center",
   },
   slidePosition: {
     position: "absolute",
