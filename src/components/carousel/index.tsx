@@ -1,7 +1,7 @@
 import stylex from "@stylexjs/stylex";
 import { FaArrowRight } from "react-icons/fa6";
 import { FaArrowLeft } from "react-icons/fa6";
-import { ReactNode, useState, useEffect, useRef } from "react";
+import { ReactNode, useState, useEffect, useRef, useCallback } from "react";
 
 interface propType {
   children: ReactNode[];
@@ -15,11 +15,20 @@ function Carousel(props: propType) {
   const totalSlides = props.children.length;
   const transitionRef = useRef<boolean>(true); // To control transition application
 
+  const nextSlide = useCallback(() => {
+    if (transitionRef.current) {
+      setIndex(index + 1);
+    } else {
+      transitionRef.current = true; // Re-enable transition after jump
+      setTimeout(() => setIndex(index + 1), 0); // Move to next with transition
+    }
+  }, [index]);
+
   useEffect(() => {
     if (props.autoPlay) {
       setInterval(nextSlide, 2000);
     }
-  }, []);
+  }, [nextSlide, props.autoPlay]);
 
   useEffect(() => {
     // Clone first and last slides for seamless infinite scrolling
@@ -41,15 +50,6 @@ function Carousel(props: propType) {
         setIndex(1); // Jump to the real first slide (no transition)
         transitionRef.current = false; // Disable transition for jump
       }
-    }
-  }
-
-  function nextSlide() {
-    if (transitionRef.current) {
-      setIndex(index + 1);
-    } else {
-      transitionRef.current = true; // Re-enable transition after jump
-      setTimeout(() => setIndex(index + 1), 0); // Move to next with transition
     }
   }
 

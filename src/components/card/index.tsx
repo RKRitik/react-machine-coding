@@ -4,6 +4,12 @@ import { Link } from "@tanstack/react-router";
 type ComponentType = { head: string; description: string; route?: string };
 const ComponentsList: ComponentType[] = [
   {
+    head: "Timer",
+    route: "/timer",
+    description:
+      "Design a custom timer hook. It should be able to start, pause and reset the timer.",
+  },
+  {
     head: "Carousel",
     route: "/carousel",
     description:
