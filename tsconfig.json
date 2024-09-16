@@ -1,5 +1,8 @@
 {
   "files": [],
+  "compilerOptions": {
+    "jsx": "react-jsx" // Enable React 17+ automatic JSX transform
+  },
   "references": [
     {
       "path": "./tsconfig.app.json"
@@ -9,3 +12,4 @@
     }
   ]
 }
+
