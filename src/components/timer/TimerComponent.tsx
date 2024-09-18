@@ -16,10 +16,10 @@ export default function TimerComponent(props: TimerProps) {
         <button data-testid="start-timer" disabled={isRunning} onClick={start}>
           Start
         </button>
-        <button disabled={!isRunning} onClick={stop}>
+        <button data-testid='stop-timer' disabled={!isRunning} onClick={stop}>
           Stop
         </button>
-        <button disabled={!isRunning} onClick={isPaused ? resume : pause}>
+        <button data-testid='pause-timer' disabled={!isRunning} onClick={isPaused ? resume : pause}>
           {isPaused ? "Resume" : "Pause"}
         </button>
       </div>
