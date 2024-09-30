@@ -26,6 +26,10 @@ const ComponentsList: ComponentType[] = [
       "Create a tree-like structure or folder. Folder can be expandable",
   },
   {
+    head: "Social Media Comment box",
+    description: "Comment box with infinite replies",
+  },
+  {
     head: "Dark/Light Theme",
     description: "Dark mode and light theme switcher",
   },
