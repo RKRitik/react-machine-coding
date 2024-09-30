@@ -21,6 +21,7 @@ const ComponentsList: ComponentType[] = [
   },
   {
     head: "Tree / Folder Structure View",
+    route: "/folder-structure",
     description:
       "Create a tree-like structure or folder. Folder can be expandable",
   },

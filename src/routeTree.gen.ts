@@ -12,6 +12,7 @@
 
 import { Route as rootRoute } from './routes/__root'
 import { Route as TimerImport } from './routes/timer'
+import { Route as FolderStructureImport } from './routes/folder-structure'
 import { Route as CarouselImport } from './routes/carousel'
 import { Route as AboutImport } from './routes/about'
 import { Route as IndexImport } from './routes/index'
@@ -20,6 +21,11 @@ import { Route as IndexImport } from './routes/index'
 
 const TimerRoute = TimerImport.update({
   path: '/timer',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const FolderStructureRoute = FolderStructureImport.update({
+  path: '/folder-structure',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -63,6 +69,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CarouselImport
       parentRoute: typeof rootRoute
     }
+    '/folder-structure': {
+      id: '/folder-structure'
+      path: '/folder-structure'
+      fullPath: '/folder-structure'
+      preLoaderRoute: typeof FolderStructureImport
+      parentRoute: typeof rootRoute
+    }
     '/timer': {
       id: '/timer'
       path: '/timer'
@@ -75,54 +88,13 @@ declare module '@tanstack/react-router' {
 
 // Create and export the route tree
 
-export interface FileRoutesByFullPath {
-  '/': typeof IndexRoute
-  '/about': typeof AboutRoute
-  '/carousel': typeof CarouselRoute
-  '/timer': typeof TimerRoute
-}
-
-export interface FileRoutesByTo {
-  '/': typeof IndexRoute
-  '/about': typeof AboutRoute
-  '/carousel': typeof CarouselRoute
-  '/timer': typeof TimerRoute
-}
-
-export interface FileRoutesById {
-  __root__: typeof rootRoute
-  '/': typeof IndexRoute
-  '/about': typeof AboutRoute
-  '/carousel': typeof CarouselRoute
-  '/timer': typeof TimerRoute
-}
-
-export interface FileRouteTypes {
-  fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/about' | '/carousel' | '/timer'
-  fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/about' | '/carousel' | '/timer'
-  id: '__root__' | '/' | '/about' | '/carousel' | '/timer'
-  fileRoutesById: FileRoutesById
-}
-
-export interface RootRouteChildren {
-  IndexRoute: typeof IndexRoute
-  AboutRoute: typeof AboutRoute
-  CarouselRoute: typeof CarouselRoute
-  TimerRoute: typeof TimerRoute
-}
-
-const rootRouteChildren: RootRouteChildren = {
-  IndexRoute: IndexRoute,
-  AboutRoute: AboutRoute,
-  CarouselRoute: CarouselRoute,
-  TimerRoute: TimerRoute,
-}
-
-export const routeTree = rootRoute
-  ._addFileChildren(rootRouteChildren)
-  ._addFileTypes<FileRouteTypes>()
+export const routeTree = rootRoute.addChildren({
+  IndexRoute,
+  AboutRoute,
+  CarouselRoute,
+  FolderStructureRoute,
+  TimerRoute,
+})
 
 /* prettier-ignore-end */
 
@@ -135,6 +107,7 @@ export const routeTree = rootRoute
         "/",
         "/about",
         "/carousel",
+        "/folder-structure",
         "/timer"
       ]
     },
@@ -146,6 +119,9 @@ export const routeTree = rootRoute
     },
     "/carousel": {
       "filePath": "carousel.tsx"
+    },
+    "/folder-structure": {
+      "filePath": "folder-structure.tsx"
     },
     "/timer": {
       "filePath": "timer.tsx"
