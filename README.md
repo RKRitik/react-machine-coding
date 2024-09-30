@@ -11,6 +11,7 @@
 # To Do List:
 
 - Social Media Comment Box
+- Optimized Dropdown menu
 - Auto complete and typeahead
 - Light/Dark Mode Toggle
 - Infinite Scroll
