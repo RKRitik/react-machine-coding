@@ -27,6 +27,7 @@ const ComponentsList: ComponentType[] = [
   },
   {
     head: "Social Media Comment box",
+    route: "/comment-box",
     description: "Comment box with infinite replies",
   },
   {

@@ -13,6 +13,7 @@
 import { Route as rootRoute } from './routes/__root'
 import { Route as TimerImport } from './routes/timer'
 import { Route as FolderStructureImport } from './routes/folder-structure'
+import { Route as CommentBoxImport } from './routes/comment-box'
 import { Route as CarouselImport } from './routes/carousel'
 import { Route as AboutImport } from './routes/about'
 import { Route as IndexImport } from './routes/index'
@@ -26,6 +27,11 @@ const TimerRoute = TimerImport.update({
 
 const FolderStructureRoute = FolderStructureImport.update({
   path: '/folder-structure',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const CommentBoxRoute = CommentBoxImport.update({
+  path: '/comment-box',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -69,6 +75,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CarouselImport
       parentRoute: typeof rootRoute
     }
+    '/comment-box': {
+      id: '/comment-box'
+      path: '/comment-box'
+      fullPath: '/comment-box'
+      preLoaderRoute: typeof CommentBoxImport
+      parentRoute: typeof rootRoute
+    }
     '/folder-structure': {
       id: '/folder-structure'
       path: '/folder-structure'
@@ -92,6 +105,7 @@ export const routeTree = rootRoute.addChildren({
   IndexRoute,
   AboutRoute,
   CarouselRoute,
+  CommentBoxRoute,
   FolderStructureRoute,
   TimerRoute,
 })
@@ -107,6 +121,7 @@ export const routeTree = rootRoute.addChildren({
         "/",
         "/about",
         "/carousel",
+        "/comment-box",
         "/folder-structure",
         "/timer"
       ]
@@ -119,6 +134,9 @@ export const routeTree = rootRoute.addChildren({
     },
     "/carousel": {
       "filePath": "carousel.tsx"
+    },
+    "/comment-box": {
+      "filePath": "comment-box.tsx"
     },
     "/folder-structure": {
       "filePath": "folder-structure.tsx"
