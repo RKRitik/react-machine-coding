@@ -19,6 +19,18 @@ const DEFAULT_COMMENTS: Comment[] = [
     user: "robert",
     timestamp: "2021-03-04T15:40:00.000Z",
     comment: "Does this work?",
+    replies: [
+      {
+        user: "robert",
+        timestamp: "2021-03-04T15:40:00.000Z",
+        comment: "Does this work? nested",
+      },
+      {
+        user: "robert",
+        timestamp: "2021-03-04T15:40:00.000Z",
+        comment: "probably not",
+      },
+    ],
   },
 ];
 export default function CommentsPage() {
@@ -31,12 +43,25 @@ export default function CommentsPage() {
     ]);
   }
 
-  function handleAddReply(comment: string, parentIndex: number) {
-    const updatedComments = [...comments];
-    updatedComments[parentIndex].replies = [
-      { user: loggedInUser, timestamp: new Date().toISOString(), comment },
-    ];
-    setComments(updatedComments);
+  function handleAddReply(comment: string, parentIndex: string) {
+    const parentLevel = [...comments];
+    const levels = parentIndex.split(",").map((v) => parseInt(v, 10));
+    const newReply = {
+      user: loggedInUser,
+      timestamp: new Date().toISOString(),
+      comment,
+    };
+    let currentObj = parentLevel; // Start with the top-level array
+    let lastObj: Comment;
+    levels.forEach((level: number) => {
+      lastObj = currentObj[level];
+      if (!lastObj.replies) {
+        lastObj.replies = [];
+      }
+      currentObj = lastObj.replies;
+    });
+    if (lastObj) lastObj?.replies?.push(newReply);
+    setComments(parentLevel);
   }
 
   return (
@@ -45,9 +70,10 @@ export default function CommentsPage() {
       <CommentBox user={loggedInUser} onSave={handleAddComment} />
       {comments.map((c, parentIndex) => (
         <AddedComment
+          commentIndex={parentIndex.toString()}
           comment={c}
-          handleAddReply={(comment: string) =>
-            handleAddReply(comment, parentIndex)
+          handleAddReply={(comment: string, pI: string) =>
+            handleAddReply(comment, pI || "-1")
           }
           loggedInUser={loggedInUser}
         />
@@ -58,18 +84,21 @@ export default function CommentsPage() {
 
 function AddedComment({
   comment,
+  commentIndex,
   loggedInUser,
   handleAddReply,
 }: {
   comment: Comment;
+  commentIndex: string;
   loggedInUser: string;
-  handleAddReply: (value: string) => void;
+  handleAddReply: (value: string, parentIndex: string) => void;
 }) {
   const [addReply, setAddReply] = useState(false);
   const [formattedDate, formattedTime] = [
     new Date(comment.timestamp).toLocaleDateString(),
     new Date(comment.timestamp).toLocaleTimeString(),
   ];
+
   return (
     <div
       style={{
@@ -90,29 +119,24 @@ function AddedComment({
       <div>
         {!!comment.replies?.length && (
           <div>
-            {comment.replies.map((reply) => (
+            {comment.replies.map((reply, index) => (
               <AddedComment
+                commentIndex={commentIndex + "," + index}
                 comment={reply}
                 loggedInUser={loggedInUser}
-                handleAddReply={() => {}}
+                handleAddReply={(value) =>
+                  handleAddReply(value, commentIndex + "," + index)
+                }
               />
             ))}
           </div>
         )}
       </div>
-      {/* {comment.replies && comment.replies?.map((reply) => {
-        <AddedComment
-          comment={reply}
-          loggedInUser={loggedInUser}
-          handleAddReply={() => {}}
-        />;
-      })} */}
       {addReply && (
         <CommentBox
           user={loggedInUser}
           onSave={(value: string) => {
-            console.log("handleAddReply", handleAddReply);
-            handleAddReply(value);
+            handleAddReply(value, commentIndex);
             setAddReply(false);
           }}
           onCancel={() => setAddReply(false)}
@@ -144,7 +168,6 @@ function CommentBox({ user, onSave, onCancel }: CommentProps) {
       <div {...stylex.props(styles.btnContainer)}>
         <Button
           onClick={() => {
-            console.log("on save...", input);
             onSave(input);
             setInput("");
           }}
