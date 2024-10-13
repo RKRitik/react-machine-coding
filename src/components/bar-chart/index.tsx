@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Button } from "../../../Component-Lab/src/ui/button";
 import stylex from "@stylexjs/stylex";
+import { motion } from "framer-motion";
 
 type Props = {
   data: { id: string; name: string; ticketCount: number; color: string }[];
@@ -38,7 +39,10 @@ function Bar({
 }) {
   const [isHovered, setIsHovered] = useState(false);
   return (
-    <div
+    <motion.div
+      initial={{ height: 0 }}
+      animate={{ height: ratio * ticketCount }}
+      exit={{ height: 0 }}
       {...stylex.props(styles.bar)}
       style={{ height: ratio * ticketCount, backgroundColor: color }}
       onMouseEnter={() => setIsHovered(true)}
@@ -49,7 +53,7 @@ function Bar({
       >
         {name}-{ticketCount}
       </div>
-    </div>
+    </motion.div>
   );
 }
 
@@ -58,7 +62,13 @@ function Bars({ data }: Props) {
   const maxValue = Math.max(...data.map((item) => item.ticketCount));
   const ratio = maxHeight / maxValue;
   return (
-    <div {...stylex.props(styles.chartContainer)}>
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 100 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.5 }}
+      {...stylex.props(styles.chartContainer)}
+    >
       <div {...stylex.props(styles.chart)}>
         {data.map((value) => (
           <Bar {...value} ratio={ratio} />
@@ -66,7 +76,7 @@ function Bars({ data }: Props) {
       </div>
       <div {...stylex.props(styles.yLabel)}>Number of Tickets</div>
       <div {...stylex.props(styles.xLabel)}>Departments</div>
-    </div>
+    </motion.div>
   );
 }
 
@@ -123,11 +133,6 @@ const styles = stylex.create({
     background: "grey",
     width: "100%",
     transition: "all 0.5s ease-in-out",
-
-    // transform: {
-    //   default: 1,
-    //   ":hover": "scaleY(1.1) translateY(-4%)",
-    // },
   },
   chart: {
     display: "flex",
