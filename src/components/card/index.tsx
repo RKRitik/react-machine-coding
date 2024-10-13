@@ -16,10 +16,6 @@ const ComponentsList: ComponentType[] = [
       "Design a Auto scroll carousel component that displays a slideshow of images or content with smooth animation",
   },
   {
-    head: "Optimized dropdown",
-    description: "Optimize dropdown wth several hundered items",
-  },
-  {
     head: "Tree / Folder Structure View",
     route: "/folder-structure",
     description:
@@ -29,6 +25,15 @@ const ComponentsList: ComponentType[] = [
     head: "Social Media Comment box",
     route: "/comment-box",
     description: "Comment box with infinite replies",
+  },
+  {
+    head: "JIRA Velocity Chart",
+    route: "/bar-chart",
+    description: "Interactive Bar Chart",
+  },
+  {
+    head: "Optimized dropdown",
+    description: "Optimize dropdown wth several hundered items",
   },
   {
     head: "Dark/Light Theme",

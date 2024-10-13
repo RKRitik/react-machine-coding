@@ -15,6 +15,7 @@ import { Route as TimerImport } from './routes/timer'
 import { Route as FolderStructureImport } from './routes/folder-structure'
 import { Route as CommentBoxImport } from './routes/comment-box'
 import { Route as CarouselImport } from './routes/carousel'
+import { Route as BarChartImport } from './routes/bar-chart'
 import { Route as AboutImport } from './routes/about'
 import { Route as IndexImport } from './routes/index'
 
@@ -37,6 +38,11 @@ const CommentBoxRoute = CommentBoxImport.update({
 
 const CarouselRoute = CarouselImport.update({
   path: '/carousel',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const BarChartRoute = BarChartImport.update({
+  path: '/bar-chart',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -66,6 +72,13 @@ declare module '@tanstack/react-router' {
       path: '/about'
       fullPath: '/about'
       preLoaderRoute: typeof AboutImport
+      parentRoute: typeof rootRoute
+    }
+    '/bar-chart': {
+      id: '/bar-chart'
+      path: '/bar-chart'
+      fullPath: '/bar-chart'
+      preLoaderRoute: typeof BarChartImport
       parentRoute: typeof rootRoute
     }
     '/carousel': {
@@ -104,6 +117,7 @@ declare module '@tanstack/react-router' {
 export const routeTree = rootRoute.addChildren({
   IndexRoute,
   AboutRoute,
+  BarChartRoute,
   CarouselRoute,
   CommentBoxRoute,
   FolderStructureRoute,
@@ -120,6 +134,7 @@ export const routeTree = rootRoute.addChildren({
       "children": [
         "/",
         "/about",
+        "/bar-chart",
         "/carousel",
         "/comment-box",
         "/folder-structure",
@@ -131,6 +146,9 @@ export const routeTree = rootRoute.addChildren({
     },
     "/about": {
       "filePath": "about.tsx"
+    },
+    "/bar-chart": {
+      "filePath": "bar-chart.tsx"
     },
     "/carousel": {
       "filePath": "carousel.tsx"
